@@ -22,7 +22,7 @@ export function createHelper<T extends string>(themeNameArray: T[]) {
     ) {
       return undefined;
     }
-    if (window.matchMedia("(prefers-color-scheme: dark)")) {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       return "dark" as T;
     }
     return "light" as T;
