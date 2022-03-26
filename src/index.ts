@@ -1,3 +1,3 @@
-import { add } from "./myModule";
+import { createHelper } from "./modules";
 
-export { add };
+export default createHelper;
