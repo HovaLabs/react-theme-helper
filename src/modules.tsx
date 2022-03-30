@@ -30,13 +30,18 @@ export function createHelper<T extends string>(themeNameArray: T[]) {
 
   type ThemeContextValue = {
     themeName: T | undefined;
+    osThemeName: T | undefined;
+    setThemeName: React.Dispatch<React.SetStateAction<T | undefined>>;
   };
 
   const ThemeContext = React.createContext<ThemeContextValue>({
     themeName: undefined,
+    osThemeName: undefined,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    setThemeName: () => {},
   });
 
-  const useThemeName = (initialThemeName?: string) => {
+  const useThemeInfoHook = (initialThemeName?: string) => {
     const [themeName, setThemeName] = React.useState<T | undefined>(
       nullishStringToThemeName(initialThemeName)
     );
@@ -68,18 +73,22 @@ export function createHelper<T extends string>(themeNameArray: T[]) {
     themeName,
   }: {
     children: React.ReactNode;
-    themeName: T;
+    themeName: T | undefined;
   }) {
+    const value = useThemeInfoHook(themeName);
     return (
-      <ThemeContext.Provider value={{ themeName }}>
-        {children}
-      </ThemeContext.Provider>
+      <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
     );
+  }
+
+  function useThemeInfo() {
+    const value = React.useContext(ThemeContext);
+    return value;
   }
 
   return {
     ThemeContext,
-    useThemeName,
+    useThemeInfo,
     ThemeProvider,
     nullishStringToThemeName,
   };
